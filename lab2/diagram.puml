@@ -1,0 +1,74 @@
+@startuml
+left to right direction
+
+actor "Admin" as A
+actor "Supplier" as S
+actor "User" as U
+actor "Guest" as G 
+
+G <|-- A
+G <|-- U
+U <|-- S
+
+usecase UC_AddProduct as "add product"
+usecase UC_AddCategory as "add category"
+usecase UC_ViewCategory as "view category"
+usecase UC_SearchFilter as "search by filter"
+usecase UC_ViewProducts as "view products"
+usecase UC_ViewRating as "view the rating"
+usecase UC_ViewReviews as "view rewiews"
+usecase UC_WriteReview as "write review"
+usecase UC_ReceiveProducts as "receive products"
+usecase UC_RateProducts as "rate products"
+usecase UC_MakePayment as "make a payment"
+usecase UC_OrderProducts as "order products"
+usecase UC_ReportSupplier as "report supplier"
+usecase UC_Try as "try to remove a competitor"
+usecase UC_Ban as "ban supplier"
+usecase UC_Mute as "mute user"
+usecase UC_Check as "check report"
+usecase UC_Sale as "provide product for sale"
+
+A --> UC_AddProduct
+A --> UC_AddCategory
+A --> UC_Mute
+A --> UC_Ban
+A --> UC_Check
+
+G --> UC_ViewCategory
+G --> UC_SearchFilter
+G --> UC_ViewProducts
+G --> UC_ViewRating
+G --> UC_ViewReviews
+
+U --> UC_WriteReview
+U --> UC_RateProducts
+U --> UC_ReceiveProducts
+U --> UC_MakePayment
+U --> UC_OrderProducts
+U --> UC_ReportSupplier
+
+S --> UC_Sale
+S --> UC_Try
+
+
+
+UC_AddProduct <.. UC_ViewProducts : <<Use>>
+UC_AddCategory <.. UC_ViewCategory : <<Use>>
+UC_ViewCategory <.. UC_SearchFilter : <<Use>>
+UC_ViewProducts <.. UC_SearchFilter : <<extends>>
+UC_ViewProducts <.. UC_OrderProducts : <<use>>
+UC_ViewProducts <.. UC_ViewReviews : <<use>>
+UC_ViewProducts <.. UC_ViewRating : <<use>>
+UC_ViewReviews <.. UC_Mute : <<use>>
+UC_WriteReview <.. UC_ViewReviews : <<use>>
+UC_WriteReview <.. UC_ReportSupplier : <<use>>
+UC_ReceiveProducts  <.. UC_WriteReview : <<use>>
+UC_ReceiveProducts  <.. UC_RateProducts : <<use>>
+UC_MakePayment <.. UC_ReceiveProducts : <<use>>
+UC_OrderProducts <.. UC_MakePayment: <<use>>
+UC_ReportSupplier  <.. UC_Check  : <<use>>
+UC_ReportSupplier  <.. UC_Try : <<extends>>
+UC_Check <.. UC_Ban  : <<use>>
+UC_Sale   <.. UC_AddProduct  : <<use>>
+@enduml
