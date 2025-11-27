@@ -1,0 +1,84 @@
+@startuml
+title Process Flow for Online Store
+
+|Customer|
+start
+:View Products;
+if (Is Product Available?) then (No)
+:Receive "Out of Stock" Message;
+stop
+else (Yes)
+:Add Products;
+if (Cart Ready?) then (Yes)
+:Submit Order;
+else (No)
+stop
+endif
+endif
+
+|E-commerce System|
+:Receive Order List;
+:Check Product Availability;
+if (Is Product Available?) then (No)
+:Send Confirmation Email (Rejection);
+stop
+else (Yes)
+:Create Pending Order;
+fork
+:Send Confirmation Email;
+fork again
+:Update Stock Quantity in DB;
+fork again
+:Send Shipping Request;
+end fork
+endif
+
+|Customer|
+:Receive Confirmation Email;
+:Process Payment;
+:Send Payment Message;
+
+|Order Management System|
+:Receive Payment Message;
+:Get Order;
+:Pack Order;
+:Ship Order;
+:Send Delivery;
+
+|Customer|
+:Receive Delivery Message;
+:Get Delivery;
+:Inspect Item;
+if (Keep Item?) then (Yes)
+stop
+else (Return Item)
+:Fill Refund Form;
+:Process Refund Form;
+endif
+
+|E-commerce System|
+if (Is Refund Timeframe Expired?) then (Yes)
+stop
+else (No)
+:Send Return Approval;
+endif
+
+|Customer|
+:Receive Return Approval;
+:Ship Return Package;
+
+|Order Management System|
+:Receive Return Package;
+if (Return Valid?) then (Approved)
+:Process Refund;
+:Send Refund Message;
+else (Rejected)
+:Refund Rejection;
+:Send Rejected Refund;
+endif
+
+|Customer|
+:Receive Refund/Rejection Message;
+stop
+
+@enduml
